@@ -1,14 +1,14 @@
 :root {
   color-scheme: dark;
-  --bg: #050812;
-  --panel: rgba(8, 17, 31, 0.94);
-  --panel-2: #0c1928;
-  --cyan: #42f5e9;
-  --pink: #ff3d9f;
+  --bg: #02050a;
+  --panel: rgba(6, 14, 25, 0.96);
+  --panel-2: #091827;
+  --cyan: #319cff;
+  --pink: #69b9ff;
   --amber: #ffd166;
   --text: #dcecf2;
   --muted: #6f8792;
-  --line: rgba(66, 245, 233, 0.22);
+  --line: rgba(49, 156, 255, 0.26);
   --danger: #ff4d68;
   font-family: Consolas, "Cascadia Mono", monospace;
 }
@@ -26,15 +26,16 @@ body {
   background: var(--bg);
   color: var(--text);
 }
-body[data-case="042"] {
-  --cyan: #ffd166;
-  --pink: #ff5c75;
-  --line: rgba(255, 209, 102, 0.22);
-}
-body[data-case="108"] {
-  --cyan: #b99cff;
-  --pink: #ff62c7;
-  --line: rgba(185, 156, 255, 0.23);
+body[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4fa;
+  --panel: rgba(255, 255, 255, 0.96);
+  --panel-2: #e0edf7;
+  --text: #102537;
+  --muted: #567184;
+  --line: rgba(13, 101, 176, 0.25);
+  --cyan: #086ebd;
+  --pink: #238bd6;
 }
 .hidden {
   display: none !important;
@@ -115,6 +116,20 @@ body[data-case="108"] {
   max-width: 720px;
   color: var(--muted);
   line-height: 1.7;
+}
+.theme-toggle {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: rgba(49, 156, 255, 0.08);
+  color: var(--cyan);
+  font-size: 9px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.theme-toggle:hover {
+  background: var(--cyan);
+  color: var(--bg);
 }
 .case-grid {
   display: grid;
@@ -684,4 +699,36 @@ body[data-case="108"] {
   .case-card p {
     min-height: 55px;
   }
+}
+body[data-theme="light"] .boot-screen,
+body[data-theme="light"] .case-select,
+body[data-theme="light"] .desktop {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(8, 110, 189, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 110, 189, 0.05) 1px, transparent 1px);
+}
+body[data-theme="light"] .case-card,
+body[data-theme="light"] .topbar,
+body[data-theme="light"] .objective-panel,
+body[data-theme="light"] .evidence-board,
+body[data-theme="light"] .taskbar,
+body[data-theme="light"] .app-window,
+body[data-theme="light"] .window-header,
+body[data-theme="light"] .sidebar,
+body[data-theme="light"] .terminal,
+body[data-theme="light"] .vault input,
+body[data-theme="light"] .toast,
+body[data-theme="light"] .ending-card {
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 16px 45px rgba(28, 70, 105, 0.18);
+}
+body[data-theme="light"] .ending {
+  background: rgba(225, 237, 247, 0.94);
+}
+body[data-theme="light"] .frequency-grid button,
+body[data-theme="light"] .ending-actions button {
+  background: var(--panel-2);
+  color: var(--text);
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 - 2026-08-28
+
+- Unified all cases under a black-and-blue visual identity.
+- Added a persistent global light/dark theme toggle.
+- Applied theme switching to case selection, desktop, windows, terminal and endings.
+
 ## 0.2.0 - 2026-08-28
 
 - Expanded NULL.OS from one story into a three-case mystery anthology.

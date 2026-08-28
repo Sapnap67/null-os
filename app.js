@@ -224,6 +224,7 @@ function save() {
   progress();
 }
 document.addEventListener("DOMContentLoaded", () => {
+  applyTheme(localStorage.getItem("null-os-theme") || "dark");
   bind();
   boot();
   setInterval(
@@ -253,6 +254,13 @@ function boot() {
   }, 1300);
 }
 function bind() {
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.onclick = () => {
+      const next = document.body.dataset.theme === "light" ? "dark" : "light";
+      localStorage.setItem("null-os-theme", next);
+      applyTheme(next);
+    };
+  });
   document
     .querySelectorAll("[data-case]")
     .forEach((b) => (b.onclick = () => start(b.dataset.case)));
@@ -269,6 +277,16 @@ function bind() {
   document
     .querySelectorAll("[data-ending]")
     .forEach((b, i) => (b.onclick = () => end(i)));
+}
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.textContent = theme === "light" ? "DARK MODE" : "LIGHT MODE";
+    button.setAttribute(
+      "aria-label",
+      theme === "light" ? "切换到深色模式" : "切换到浅色模式",
+    );
+  });
 }
 function cases() {
   document.querySelector("#desktop").classList.add("hidden");
