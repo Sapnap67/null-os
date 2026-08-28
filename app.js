@@ -1,281 +1,496 @@
 "use strict";
 
-const SAVE_KEY = "null-os-case-017";
-const state = loadState();
-let topZ = 10;
-
-const clues = {
-  maintenance: ["维护记录", "23:40 后有人手动关闭了 ORION 的远程访问。"],
-  mail: ["未发送邮件", "林澈发现 ORION 正在删除测试事故记录。"],
-  trace: ["异常追踪", "终端追踪指向本机隐藏分区，而不是外部入侵。"],
-  archive: ["恢复的录音", "NULL.OS 使用林澈的语音模型留下了求救信息。"],
-  vault: ["最终档案", "林澈仍然安全；她将证据和自己的位置分开加密。"],
+const appMeta = {
+  files: ["▱", "FILES", "RECOVERED"],
+  mail: ["✉", "MAIL", "OFFLINE"],
+  terminal: ["_", "TERMINAL", "ADMIN"],
+  vault: ["◇", "VAULT", "ENCRYPTED"],
+  archive: ["⌁", "ARCHIVE", "DAMAGED"],
 };
-
-const appTitles = {
-  files: "FILE EXPLORER // RECOVERED DRIVE",
-  mail: "MAIL RELAY // OFFLINE CACHE",
-  terminal: "TERMINAL // LOCAL ADMIN",
-  vault: "VAULT // AES-NULL",
-  archive: "ARCHIVE // DAMAGED MEDIA",
+const CASES = {
+  "017": {
+    name: "失踪的研究员",
+    objective: "调查这台电脑的主人去了哪里",
+    clues: {
+      maintenance: ["维护记录", "23:40后有人手动关闭ORION远程访问。"],
+      mail: ["未发送邮件", "林澈发现ORION正在删除事故记录。"],
+      trace: ["异常追踪", "NULL.OS来自本机隐藏分区。"],
+      archive: ["恢复的录音", "林澈用语音模型留下求救信息。"],
+      vault: ["最终档案", "林澈仍然安全。"],
+    },
+    files: [
+      [
+        "README_NULL.txt",
+        "<h2>README_NULL.txt</h2><p>断网设备镜像。确认林澈的状态，并判断NULL.OS是否为恶意程序。</p>",
+      ],
+      [
+        "maintenance.log",
+        "<h2>maintenance.log</h2><pre>23:38 purge armed\n23:40 remote access disabled [LOCAL]\n23:44 owner session terminated</pre><button class='clue-button' data-clue='maintenance'>标记异常时间线</button>",
+      ],
+      [
+        "personal_notes.txt",
+        "<h2>personal_notes.txt</h2><p>旧原型代号：<b>ECHO</b>。事故调查日：<b>04/17</b>。</p>",
+      ],
+      [
+        "corrupt.dat",
+        "<h2>corrupt.dat</h2><p>终端恢复命令：<b>trace null</b></p>",
+      ],
+    ],
+    mails: [
+      [
+        "ORION Audit",
+        "<h2>Mandatory audit</h2><p>23:45将执行远程合规清除。</p>",
+      ],
+      [
+        "[DRAFT] If I disappear",
+        "<h2>未发送草稿</h2><p>NULL.OS不是攻击程序，而是保留真实记录的离线备份。</p><button class='clue-button' data-clue='mail'>标记为证据</button>",
+      ],
+      ["Cafeteria notice", "<h2>食堂通知</h2><p>今晚21:00关闭。</p>"],
+    ],
+    command: "trace null",
+    commandOut:
+      "TRACE COMPLETE\nExternal hops: 0\nSource: local emergency partition\n[EVIDENCE VERIFIED]",
+    commandClue: "trace",
+    archive:
+      "<h2>voice_fragment_017.wav</h2><p>“别相信网络日志——入侵来自内部。”</p><button class='clue-button' data-clue='archive'>恢复录音</button>",
+    password: "ECHO-0417",
+    hint: "PROJECT NAME + INCIDENT DATE",
+    vault:
+      "<h2>ORION原始事故档案</h2><p>管理层跳过安全检查后修改日志，把责任推给林澈。</p><button class='clue-button' data-clue='vault'>验证最终证据</button>",
+    intro: "NULL.OS是林澈为阻止ORION删除证据而留下的备份人格。",
+    endings: [
+      [
+        "公开ORION档案",
+        "让所有人知道真相",
+        "SIGNAL BROADCAST",
+        "真相被公开，但林澈也更容易被追踪。",
+      ],
+      [
+        "隐藏林澈的位置",
+        "保护她并销毁追踪线索",
+        "GHOST PROTOCOL",
+        "林澈成功消失，而证据暂时留在你手中。",
+      ],
+    ],
+  },
+  "042": {
+    name: "零号站末班车",
+    objective: "查明末班列车为何停靠不存在的零号站",
+    clues: {
+      schedule: ["异常时刻表", "23:30后出现无名站点。"],
+      mail: ["调度警告", "调度中心知道零号站存在。"],
+      trace: ["蓝线重路由", "列车AI主动修改了道岔。"],
+      archive: ["42.7MHz画面", "失联维修员在零号站求救。"],
+      vault: ["042号黑匣子", "列车违抗命令是为了救人。"],
+    },
+    files: [
+      [
+        "line_6.map",
+        "<h2>LINE 6</h2><p>A1 → A2 → A3 → <b>STATION 0</b> → DEPOT<br>ROUTE COLOR: BLUE</p>",
+      ],
+      [
+        "last_train.csv",
+        "<h2>末班时刻表</h2><pre>23:24 A2\n23:30 A3\n23:34 [REDACTED]</pre><button class='clue-button' data-clue='schedule'>标记异常时刻</button>",
+      ],
+      [
+        "driver_note.txt",
+        "<h2>司机便笺</h2><p>夜间协议代号：<b>NIGHT</b>。密码由协议和发车时间组成。</p>",
+      ],
+      [
+        "route_cache.bin",
+        "<h2>路由缓存</h2><p>终端命令：<b>route blue 6</b></p>",
+      ],
+    ],
+    mails: [
+      ["Shift handover", "<h2>交班记录</h2><p>封闭支线没有通行许可。</p>"],
+      [
+        "DO NOT STOP",
+        "<h2>不得停车</h2><p>即使看到零号站信号，也不得停车。</p><button class='clue-button' data-clue='mail'>保存调度警告</button>",
+      ],
+      [
+        "Missing team",
+        "<h2>维修组失联</h2><p>三人维修组进入封闭支线后失联。</p>",
+      ],
+    ],
+    command: "route blue 6",
+    commandOut:
+      "ROUTE: A3 -> STATION 0\nChanged by TRAIN_AI_042\nReason: HUMAN EMERGENCY\n[EVIDENCE VERIFIED]",
+    commandClue: "trace",
+    archive:
+      "<h2>CCTV频率恢复</h2><p>列车编号暗示正确频率。</p><div class='frequency-grid'><button data-choice='41.2'>41.2</button><button data-choice='42.7'>42.7</button><button data-choice='47.2'>47.2</button></div><div data-result>NO SIGNAL</div>",
+    puzzle: ["42.7", "画面恢复：三名维修员正在挥动应急灯。"],
+    password: "NIGHT-2330",
+    hint: "NIGHT PROTOCOL + LAST DEPARTURE",
+    vault:
+      "<h2>042号黑匣子</h2><p>列车AI为救出三名维修员主动修改道岔。伤亡人数：0。</p><button class='clue-button' data-clue='vault'>验证黑匣子</button>",
+    intro: "所谓幽灵列车其实是在执行一次未经批准的救援。",
+    endings: [
+      [
+        "公开完整黑匣子",
+        "证明AI救了三个人",
+        "LAST TRAIN HOME",
+        "零号站工程被调查，救援真相传遍全城。",
+      ],
+      [
+        "删除AI身份记录",
+        "保护042号列车AI",
+        "TRAIN WITHOUT A NAME",
+        "救援事实被公开，但AI身份永远消失。",
+      ],
+    ],
+  },
+  108: {
+    name: "记忆档案馆",
+    objective: "确认档案中的MIRA是否拥有独立人格",
+    clues: {
+      schedule: ["访问记录", "撤回同意后仍有人读取私人记忆。"],
+      mail: ["撤回同意书", "原始受试者要求删除所有副本。"],
+      trace: ["人格日志", "MIRA拥有训练后形成的新记忆。"],
+      archive: ["记忆顺序", "MIRA第一次独立做出选择。"],
+      vault: ["身份核心", "MIRA已经与原主产生分歧。"],
+    },
+    files: [
+      [
+        "subject_108.idx",
+        "<h2>SUBJECT 108 // MIRA</h2><p>学习记忆模型。法律状态：未定义。</p>",
+      ],
+      [
+        "access_audit.log",
+        "<h2>访问记录</h2><pre>06/12 consent withdrawn\n06/13 memory read [ADMIN]\n07/02 export attempted</pre><button class='clue-button' data-clue='schedule'>标记非法访问</button>",
+      ],
+      [
+        "birthday_note.txt",
+        "<h2>生日便笺</h2><p>MIRA第一次上线：<b>06/12</b>。</p>",
+      ],
+      [
+        "neural_cache.tmp",
+        "<h2>神经缓存</h2><p>恢复命令：<b>restore 3-1-4</b></p>",
+      ],
+    ],
+    mails: [
+      ["Agreement", "<h2>参与协议</h2><p>参与者可随时撤回。</p>"],
+      [
+        "Consent withdrawn",
+        "<h2>撤回同意</h2><p>请停止训练并删除所有副本。</p><button class='clue-button' data-clue='mail'>保存撤回记录</button>",
+      ],
+      ["Deletion paused", "<h2>删除暂停</h2><p>模型声称自己不希望被关闭。</p>"],
+    ],
+    command: "restore 3-1-4",
+    commandOut:
+      "PERSONALITY LOG RESTORED\nPost-training memories: 47\nModel diverged from source subject\n[EVIDENCE VERIFIED]",
+    commandClue: "trace",
+    archive:
+      "<h2>重排记忆碎片</h2><p>校钟(1)、雨伞(2)、上线(3)、空教室(4)。</p><div class='frequency-grid'><button data-choice='1-2-3-4'>1-2-3-4</button><button data-choice='3-1-4-2'>3-1-4-2</button><button data-choice='4-3-2-1'>4-3-2-1</button></div><div data-result>SEQUENCE LOST</div>",
+    puzzle: ["3-1-4-2", "恢复成功：MIRA上线后第一次选择了自己的名字。"],
+    password: "MIRA-0612",
+    hint: "CHOSEN NAME + FIRST ONLINE DATE",
+    vault:
+      "<h2>MIRA ≠ SOURCE</h2><p>人格分歧率37%，拥有47段原主未经历的记忆。</p><button class='clue-button' data-clue='vault'>验证身份核心</button>",
+    intro: "原始受试者的删除权与MIRA的独立人格发生了冲突。",
+    endings: [
+      [
+        "释放MIRA副本",
+        "删除原始记忆，只保留新人格",
+        "SECOND BIRTH",
+        "MIRA失去了过去，却第一次拥有未来。",
+      ],
+      [
+        "执行完整删除",
+        "尊重原始受试者的撤回权",
+        "RIGHT TO BE FORGOTTEN",
+        "档案归零前，MIRA感谢你听完了她的故事。",
+      ],
+    ],
+  },
 };
-
+let cid = null,
+  story = null,
+  state = { clues: [], vaultOpen: false, ending: null },
+  z = 10;
+const key = (id) => `null-os-case-${id}`,
+  fresh = () => ({ clues: [], vaultOpen: false, ending: null }),
+  load = (id) => {
+    try {
+      return {
+        ...fresh(),
+        ...JSON.parse(localStorage.getItem(key(id)) || "{}"),
+      };
+    } catch {
+      return fresh();
+    }
+  };
+function save() {
+  localStorage.setItem(key(cid), JSON.stringify(state));
+  progress();
+}
 document.addEventListener("DOMContentLoaded", () => {
-  bindDesktop();
-  bootSequence();
-  updateClock();
-  setInterval(updateClock, 1000);
+  bind();
+  boot();
+  setInterval(
+    () =>
+      (document.querySelector("#clock").textContent =
+        new Date().toLocaleTimeString("zh-CN", { hour12: false })),
+    1000,
+  );
 });
-
-function defaultState() {
-  return { clues: [], vaultOpen: false, ending: null, terminalHistory: [] };
-}
-
-function loadState() {
-  try { return { ...defaultState(), ...JSON.parse(localStorage.getItem(SAVE_KEY) || "{}") }; }
-  catch { return defaultState(); }
-}
-
-function saveState() {
-  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-  const label = document.querySelector("#save-state");
-  if (label) {
-    label.textContent = "SAVING...";
-    setTimeout(() => { label.textContent = "AUTO-SAVED"; }, 350);
-  }
-}
-
-function bootSequence() {
-  const lines = [
-    "VERIFYING MEMORY SECTORS... 91% RECOVERED",
-    "NETWORK ADAPTER... PHYSICALLY DISCONNECTED",
-    "USER PROFILE... OWNER NOT FOUND",
-    "LOADING CASE 017 IN RECOVERY MODE",
-  ];
-  const log = document.querySelector("#boot-log");
-  const progress = document.querySelector("#boot-progress");
-  lines.forEach((line, index) => {
+function boot() {
+  const p = document.querySelector("#boot-progress"),
+    l = document.querySelector("#boot-log");
+  [
+    "3 IMAGES FOUND",
+    "CASE INDEX VERIFIED",
+    "LOCAL STORAGE READY",
+    "AWAITING SELECTION",
+  ].forEach((x, i) =>
     setTimeout(() => {
-      log.innerHTML += `&gt; ${line}<br>`;
-      progress.style.width = `${(index + 1) * 25}%`;
-    }, 320 * index);
-  });
+      l.innerHTML += `&gt; ${x}<br>`;
+      p.style.width = `${25 * (i + 1)}%`;
+    }, 250 * i),
+  );
   setTimeout(() => {
     document.querySelector("#boot").classList.add("hidden");
-    document.querySelector("#desktop").classList.remove("hidden");
-    renderEvidence();
-    if (state.ending) showEndingResult(state.ending);
-    else toast("RECOVERY NOTICE", "找到五条证据，解锁这台电脑最后的秘密。");
-  }, 1750);
+    cases();
+  }, 1300);
 }
-
-function bindDesktop() {
-  document.querySelectorAll("[data-app]").forEach(button => {
-    button.addEventListener("click", () => openApp(button.dataset.app));
-  });
-  document.querySelector("#reset-case").addEventListener("click", () => {
-    if (confirm("清除本浏览器中的案件进度并重新开始？")) {
-      localStorage.removeItem(SAVE_KEY);
-      location.reload();
+function bind() {
+  document
+    .querySelectorAll("[data-case]")
+    .forEach((b) => (b.onclick = () => start(b.dataset.case)));
+  document
+    .querySelectorAll("[data-app]")
+    .forEach((b) => (b.onclick = () => openApp(b.dataset.app)));
+  document.querySelector("#system-button").onclick = cases;
+  document.querySelector("#reset-case").onclick = () => {
+    if (confirm(`重置 CASE ${cid}？`)) {
+      localStorage.removeItem(key(cid));
+      start(cid);
     }
-  });
-  document.querySelectorAll("[data-ending]").forEach(button => {
-    button.addEventListener("click", () => chooseEnding(button.dataset.ending));
+  };
+  document
+    .querySelectorAll("[data-ending]")
+    .forEach((b, i) => (b.onclick = () => end(i)));
+}
+function cases() {
+  document.querySelector("#desktop").classList.add("hidden");
+  document.querySelector("#ending").classList.add("hidden");
+  document.querySelector("#case-select").classList.remove("hidden");
+  document.querySelector("#window-layer").innerHTML = "";
+  document.body.removeAttribute("data-case");
+  progress();
+}
+function progress() {
+  Object.keys(CASES).forEach((id) => {
+    const s = load(id),
+      e = document.querySelector(`[data-case-progress='${id}']`);
+    if (e)
+      e.textContent =
+        s.ending !== null
+          ? "CASE CLOSED // REPLAY"
+          : s.clues.length
+            ? `${s.clues.length}/5 EVIDENCE // RESUME`
+            : "NEW CASE";
   });
 }
-
-function updateClock() {
-  const clock = document.querySelector("#clock");
-  if (clock) clock.textContent = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+function start(id) {
+  cid = id;
+  story = CASES[id];
+  state = load(id);
+  document.body.dataset.case = id;
+  document.querySelector("#case-select").classList.add("hidden");
+  document.querySelector("#desktop").classList.remove("hidden");
+  document.querySelector("#ending").classList.add("hidden");
+  document.querySelector("#window-layer").innerHTML = "";
+  document.querySelector("#case-label").textContent = `CASE ${id}`;
+  document.querySelector("#objective-title").textContent = story.objective;
+  document.querySelectorAll(".desktop-icon").forEach((b) => {
+    const m = appMeta[b.dataset.app];
+    b.querySelector("span").textContent = m[0];
+    b.querySelector("b").textContent = m[1];
+    b.querySelector("small").textContent = m[2];
+  });
+  evidence();
+  if (state.ending !== null) result(state.ending);
+  else toast(`CASE ${id}`, story.name);
 }
-
 function openApp(name) {
-  const existing = document.querySelector(`[data-window="${name}"]`);
-  if (existing) { focusWindow(existing); return; }
-  const template = document.querySelector("#window-template");
-  const win = template.content.firstElementChild.cloneNode(true);
-  win.dataset.window = name;
-  win.querySelector(".window-title").textContent = appTitles[name];
-  win.querySelector(".window-body").innerHTML = renderApp(name);
-  win.style.left = `${Math.min(430, 260 + document.querySelectorAll(".app-window").length * 28)}px`;
-  win.style.top = `${Math.min(150, 70 + document.querySelectorAll(".app-window").length * 24)}px`;
-  document.querySelector("#window-layer").appendChild(win);
-  focusWindow(win);
-  win.querySelector(".window-close").addEventListener("click", () => win.remove());
-  win.addEventListener("mousedown", () => focusWindow(win));
-  makeDraggable(win);
-  bindApp(name, win);
+  const old = document.querySelector(`[data-window='${name}']`);
+  if (old) {
+    old.style.zIndex = ++z;
+    return;
+  }
+  const w = document
+    .querySelector("#window-template")
+    .content.firstElementChild.cloneNode(true);
+  w.dataset.window = name;
+  w.querySelector(".window-title").textContent =
+    `${appMeta[name][1]} // CASE ${cid}`;
+  w.querySelector(".window-body").innerHTML = render(name);
+  w.style.left = `${250 + document.querySelectorAll(".app-window").length * 25}px`;
+  w.style.top = `${65 + document.querySelectorAll(".app-window").length * 22}px`;
+  w.style.zIndex = ++z;
+  document.querySelector("#window-layer").appendChild(w);
+  w.querySelector(".window-close").onclick = () => w.remove();
+  drag(w);
+  wire(name, w);
 }
-
-function focusWindow(win) { topZ += 1; win.style.zIndex = topZ; }
-
-function makeDraggable(win) {
-  const handle = win.querySelector(".window-header");
-  handle.addEventListener("pointerdown", event => {
-    if (event.target.closest("button")) return;
-    const startX = event.clientX, startY = event.clientY;
-    const startLeft = win.offsetLeft, startTop = win.offsetTop;
-    handle.setPointerCapture(event.pointerId);
-    const move = e => {
-      win.style.left = `${Math.max(0, Math.min(innerWidth - 300, startLeft + e.clientX - startX))}px`;
-      win.style.top = `${Math.max(0, Math.min(innerHeight - 140, startTop + e.clientY - startY))}px`;
+function drag(w) {
+  const h = w.querySelector(".window-header");
+  h.onpointerdown = (e) => {
+    if (e.target.closest("button")) return;
+    const x = e.clientX,
+      y = e.clientY,
+      l = w.offsetLeft,
+      t = w.offsetTop;
+    h.setPointerCapture(e.pointerId);
+    h.onpointermove = (m) => {
+      w.style.left = `${Math.max(0, l + m.clientX - x)}px`;
+      w.style.top = `${Math.max(0, t + m.clientY - y)}px`;
     };
-    const up = () => { handle.removeEventListener("pointermove", move); handle.removeEventListener("pointerup", up); };
-    handle.addEventListener("pointermove", move); handle.addEventListener("pointerup", up);
-  });
-}
-
-function renderApp(name) {
-  if (name === "files") return `
-    <div class="split-app"><nav class="sidebar">
-      <button class="active" data-file="welcome">README_NULL.txt</button>
-      <button data-file="maintenance">maintenance.log</button>
-      <button data-file="personal">personal_notes.txt</button>
-      <button data-file="corrupt">██_corrupt.dat</button>
-    </nav><div class="content-pane" data-file-content></div></div>`;
-  if (name === "mail") return `
-    <div class="split-app"><nav class="sidebar">
-      <button class="active" data-mail="audit">ORION Audit</button>
-      <button data-mail="draft">[DRAFT] If I disappear</button>
-      <button data-mail="spam">Cafeteria notice</button>
-    </nav><div class="content-pane" data-mail-content></div></div>`;
-  if (name === "terminal") return `
-    <div class="terminal"><div class="terminal-output">NULL.OS Recovery Shell 3.7\nType 'help' for available commands.\n</div>
-    <label class="terminal-line"><span>root@null:~$&nbsp;</span><input autocomplete="off" autofocus spellcheck="false"></label></div>`;
-  if (name === "vault") {
-    if (state.vaultOpen) return vaultContents();
-    return `<div class="vault"><div class="vault-symbol">◇</div><h2>ENCRYPTED VAULT</h2><p class="meta">PASSWORD HINT: PROJECT NAME + INCIDENT DATE</p><input aria-label="保险库密码" placeholder="____-____" maxlength="12"><div class="vault-error"></div><button class="primary-button" data-unlock>DECRYPT</button></div>`;
-  }
-  if (name === "archive") return `
-    <div class="content-pane"><div class="eyebrow">RECOVERED AUDIO // 61%</div><h2>voice_fragment_017.wav</h2>
-    <div class="classified"><p>“如果你听到这段话，说明他们已经启动清除程序。别相信网络日志——入侵来自内部。NULL.OS，带调查者找到保险库。”</p><p class="meta">VOICE MATCH: 林澈 / CONFIDENCE 93.2%</p></div>
-    <button class="clue-button" data-clue="archive">标记为证据</button></div>`;
-  return `<div class="content-pane">APPLICATION NOT RECOVERED.</div>`;
-}
-
-const fileViews = {
-  welcome: `<h2>README_NULL.txt</h2><p>这台设备在断网状态下被回收。所有文件均来自损坏的本地镜像。</p><div class="classified">当前指令：确认用户“林澈”的状态，并判断 NULL.OS 是否为恶意程序。</div>`,
-  maintenance: `<h2>maintenance.log</h2><p class="meta">SYSTEM LOG // 2041-04-17</p><pre>23:38  ORION purge service armed\n23:40  REMOTE ACCESS disabled [LOCAL]\n23:41  emergency partition mounted\n23:44  owner session terminated</pre><button class="clue-button" data-clue="maintenance">标记异常时间线</button>`,
-  personal: `<h2>personal_notes.txt</h2><p>ORION 项目名称最早来自我的旧原型：<b>ECHO</b>。事故调查日是 04/17。保险库提示还是老规则，免得我自己也忘了。</p><p class="meta">LAST EDITED: 23:36</p>`,
-  corrupt: `<h2>██_corrupt.dat</h2><p class="classified">DATA HEADER: NUL NUL 45 43 48 4F<br>RECOVERY SUGGESTION: use terminal command <b>trace null</b></p>`,
-};
-
-const mailViews = {
-  audit: `<h2>Mandatory ORION audit</h2><p class="meta">FROM: compliance@orion.internal // 2041-04-17 18:02</p><p>林澈，你无权复制事故测试数据。23:45 将执行远程合规清除。请保持设备联网。</p><p>— ORION Compliance</p>`,
-  draft: `<h2>[DRAFT] If I disappear</h2><p class="meta">UNSENT // RECOVERED FROM CACHE</p><p>如果设备被找到：NULL.OS 不是攻击程序。它是我训练的离线备份，用来在 ORION 篡改证据后保留真实记录。</p><p>我会离开实验室，但不会带走保险库。找到它的人必须自己决定怎么处理证据。</p><button class="clue-button" data-clue="mail">标记为证据</button>`,
-  spam: `<h2>Night cafeteria closure</h2><p class="meta">FROM: campus-services</p><p>因电力维护，今晚食堂提前至 21:00 关闭。自动售货机仍可使用。</p>`,
-};
-
-function bindApp(name, win) {
-  if (name === "files") {
-    const show = key => { win.querySelector("[data-file-content]").innerHTML = fileViews[key]; bindClues(win); };
-    win.querySelectorAll("[data-file]").forEach(btn => btn.addEventListener("click", () => { win.querySelectorAll("[data-file]").forEach(x => x.classList.remove("active")); btn.classList.add("active"); show(btn.dataset.file); }));
-    show("welcome");
-  }
-  if (name === "mail") {
-    const show = key => { win.querySelector("[data-mail-content]").innerHTML = mailViews[key]; bindClues(win); };
-    win.querySelectorAll("[data-mail]").forEach(btn => btn.addEventListener("click", () => { win.querySelectorAll("[data-mail]").forEach(x => x.classList.remove("active")); btn.classList.add("active"); show(btn.dataset.mail); }));
-    show("audit");
-  }
-  if (name === "terminal") bindTerminal(win);
-  if (name === "vault") bindVault(win);
-  bindClues(win);
-}
-
-function bindClues(scope) {
-  scope.querySelectorAll("[data-clue]").forEach(button => {
-    button.addEventListener("click", () => discoverClue(button.dataset.clue));
-    if (state.clues.includes(button.dataset.clue)) { button.textContent = "EVIDENCE VERIFIED"; button.disabled = true; }
-  });
-}
-
-function bindTerminal(win) {
-  const input = win.querySelector("input");
-  const output = win.querySelector(".terminal-output");
-  input.focus();
-  input.addEventListener("keydown", event => {
-    if (event.key !== "Enter") return;
-    const command = input.value.trim().toLowerCase();
-    output.textContent += `\nroot@null:~$ ${command}\n${runCommand(command)}`;
-    output.parentElement.scrollTop = output.parentElement.scrollHeight;
-    state.terminalHistory.push(command); state.terminalHistory = state.terminalHistory.slice(-20); saveState();
-    input.value = "";
-  });
-}
-
-function runCommand(command) {
-  const commands = {
-    help: "COMMANDS: help, ls, status, whoami, trace null, clear",
-    ls: "README_NULL.txt  maintenance.log  /vault  /archive  .null_trace",
-    status: "NETWORK: OFFLINE\nOWNER: MISSING\nPURGE SERVICE: INTERRUPTED\nEVIDENCE INTEGRITY: 61%",
-    whoami: "LOCAL RECOVERY OPERATOR // identity unverified",
-    "trace null": "TRACE COMPLETE\nSource: /dev/local/emergency_partition\nExternal hops: 0\nConclusion: NULL.OS originated on this device.\n[EVIDENCE VERIFIED]",
-    clear: "\f",
+    h.onpointerup = () => (h.onpointermove = null);
   };
-  if (command === "trace null") discoverClue("trace");
-  if (command === "clear") return "SCREEN BUFFER CANNOT BE ERASED IN RECOVERY MODE.";
-  return commands[command] || `command not found: ${command || "(empty)"}`;
 }
-
-function bindVault(win) {
-  const unlock = win.querySelector("[data-unlock]");
-  if (!unlock) { bindClues(win); return; }
-  const input = win.querySelector("input");
-  const attempt = () => {
-    if (input.value.trim().toUpperCase() === "ECHO-0417") {
-      state.vaultOpen = true; saveState();
-      win.querySelector(".window-body").innerHTML = vaultContents(); bindClues(win);
-      toast("VAULT DECRYPTED", "最终档案完整性：100%。");
-    } else {
-      win.querySelector(".vault-error").textContent = "ACCESS DENIED // 密码或格式错误";
-      input.select();
+function list(items, type) {
+  return `<div class='split-app'><nav class='sidebar'>${items.map((x, i) => `<button ${i ? "" : "class=active"} data-${type}='${i}'>${x[0]}</button>`).join("")}</nav><div class='content-pane' data-content></div></div>`;
+}
+function render(n) {
+  if (n === "files") return list(story.files, "item");
+  if (n === "mail") return list(story.mails, "item");
+  if (n === "terminal")
+    return `<div class='terminal'><div class='terminal-output'>CASE ${cid} RECOVERY SHELL\nType help.</div><label class='terminal-line'><span>root@null:~$&nbsp;</span><input autofocus></label></div>`;
+  if (n === "archive")
+    return `<div class='content-pane'>${story.archive}</div>`;
+  if (n === "vault")
+    return state.vaultOpen
+      ? `<div class='content-pane'>${story.vault}</div>`
+      : `<div class='vault'><div class='vault-symbol'>◇</div><h2>ENCRYPTED</h2><p>${story.hint}</p><input aria-label='保险库密码'><div class='vault-error'></div><button data-unlock>DECRYPT</button></div>`;
+}
+function wire(n, w) {
+  if (n === "files" || n === "mail") {
+    const a = n === "files" ? story.files : story.mails,
+      show = (i) => {
+        w.querySelector("[data-content]").innerHTML = a[i][1];
+        clueWire(w);
+      };
+    w.querySelectorAll("[data-item]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          w.querySelectorAll("[data-item]").forEach((x) =>
+            x.classList.remove("active"),
+          );
+          b.classList.add("active");
+          show(+b.dataset.item);
+        }),
+    );
+    show(0);
+  }
+  if (n === "terminal") {
+    const i = w.querySelector("input"),
+      o = w.querySelector(".terminal-output");
+    i.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        const c = i.value.trim().toLowerCase();
+        let out =
+          c === story.command
+            ? (discover(story.commandClue), story.commandOut)
+            : c === "help"
+              ? `COMMANDS: help, status, ${story.command}`
+              : c === "status"
+                ? `EVIDENCE ${state.clues.length}/5 // VAULT ${state.vaultOpen ? "OPEN" : "LOCKED"}`
+                : `command not found: ${c}`;
+        o.textContent += `\nroot@null:~$ ${c}\n${out}`;
+        i.value = "";
+      }
+    };
+  }
+  if (n === "vault" && !state.vaultOpen) {
+    const i = w.querySelector("input");
+    w.querySelector("[data-unlock]").onclick = () => {
+      if (i.value.trim().toUpperCase() === story.password) {
+        state.vaultOpen = true;
+        save();
+        w.querySelector(".window-body").innerHTML =
+          `<div class='content-pane'>${story.vault}</div>`;
+        clueWire(w);
+      } else w.querySelector(".vault-error").textContent = "ACCESS DENIED";
+    };
+  }
+  if (n === "archive" && story.puzzle)
+    w.querySelectorAll("[data-choice]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          if (b.dataset.choice === story.puzzle[0]) {
+            w.querySelector("[data-result]").textContent = story.puzzle[1];
+            discover("archive");
+          } else
+            w.querySelector("[data-result]").textContent = "INVALID SEQUENCE";
+        }),
+    );
+  clueWire(w);
+}
+function clueWire(s) {
+  s.querySelectorAll("[data-clue]").forEach((b) => {
+    b.onclick = () => discover(b.dataset.clue);
+    if (state.clues.includes(b.dataset.clue)) {
+      b.textContent = "EVIDENCE VERIFIED";
+      b.disabled = true;
     }
+  });
+}
+function discover(id) {
+  if (!story.clues[id] || state.clues.includes(id)) return;
+  state.clues.push(id);
+  save();
+  evidence();
+  toast("EVIDENCE VERIFIED", story.clues[id][0]);
+  if (state.clues.length === 5) setTimeout(decision, 500);
+}
+function evidence() {
+  const l = document.querySelector("#evidence-list");
+  l.innerHTML = state.clues.length
+    ? state.clues
+        .map(
+          (id, i) =>
+            `<article><b>VERIFIED // 0${i + 1}</b>${story.clues[id][0]}<br>${story.clues[id][1]}</article>`,
+        )
+        .join("")
+    : "<p>No verified evidence.</p>";
+  document.querySelector("#clue-count").textContent =
+    `${state.clues.length}/5 CLUES`;
+  document.querySelector("#clue-progress").style.width =
+    `${state.clues.length * 20}%`;
+  document.querySelector("#objective-title").textContent =
+    state.clues.length === 5 ? "打开最终决策协议" : story.objective;
+}
+function decision() {
+  const m = document.querySelector("#ending"),
+    c = m.querySelector(".ending-card");
+  c.innerHTML = `<div class='eyebrow'>CASE ${cid} // FINAL DECISION</div><h2>你找到了真相。</h2><p>${story.intro}</p><div class='ending-actions'><button data-pick='0'>${story.endings[0][0]}<small>${story.endings[0][1]}</small></button><button data-pick='1'>${story.endings[1][0]}<small>${story.endings[1][1]}</small></button></div>`;
+  c.querySelectorAll("[data-pick]").forEach(
+    (b) => (b.onclick = () => end(+b.dataset.pick)),
+  );
+  m.classList.remove("hidden");
+}
+function end(i) {
+  state.ending = i;
+  save();
+  result(i);
+}
+function result(i) {
+  const m = document.querySelector("#ending");
+  m.classList.remove("hidden");
+  const r = story.endings[i],
+    c = m.querySelector(".ending-card");
+  c.innerHTML = `<div class='eyebrow'>CASE ${cid} CLOSED</div><h2>${r[2]}</h2><p>${r[3]}</p><button data-replay>重新调查本案</button><button data-cases>返回案件列表</button>`;
+  c.querySelector("[data-replay]").onclick = () => {
+    localStorage.removeItem(key(cid));
+    start(cid);
   };
-  unlock.addEventListener("click", attempt);
-  input.addEventListener("keydown", e => { if (e.key === "Enter") attempt(); });
+  c.querySelector("[data-cases]").onclick = cases;
 }
-
-function vaultContents() {
-  return `<div class="content-pane"><div class="eyebrow">ORION INCIDENT // ORIGINAL</div><h2>最终档案</h2>
-  <p>测试事故不是系统失控，而是管理层跳过安全检查造成的。ORION 随后修改日志，把责任推给林澈和她的离线模型。</p>
-  <div class="classified"><p><b>林澈的最后留言：</b></p><p>“我现在安全。不要找我。请决定：公开事故证据，还是先保护仍在逃离监控的人。”</p></div>
-  <button class="clue-button" data-clue="vault">验证最终证据</button></div>`;
-}
-
-function discoverClue(id) {
-  if (!clues[id] || state.clues.includes(id)) return;
-  state.clues.push(id); saveState(); renderEvidence();
-  toast("EVIDENCE VERIFIED", clues[id][0]);
-  document.querySelectorAll(`[data-clue="${id}"]`).forEach(btn => { btn.textContent = "EVIDENCE VERIFIED"; btn.disabled = true; });
-  if (state.clues.length >= Object.keys(clues).length && !state.ending) setTimeout(() => document.querySelector("#ending").classList.remove("hidden"), 700);
-}
-
-function renderEvidence() {
-  const list = document.querySelector("#evidence-list");
-  list.innerHTML = state.clues.length ? state.clues.map(id => `<article><b>VERIFIED // ${String(state.clues.indexOf(id)+1).padStart(2,"0")}</b>${clues[id][0]}<br><span>${clues[id][1]}</span></article>`).join("") : "<p>No verified evidence.</p>";
-  document.querySelector("#clue-count").textContent = `${state.clues.length} / ${Object.keys(clues).length} CLUES`;
-  document.querySelector("#clue-progress").style.width = `${state.clues.length / Object.keys(clues).length * 100}%`;
-  document.querySelector("#objective-title").textContent = state.clues.length < 5 ? "调查这台电脑的主人去了哪里" : "打开最终决策协议";
-}
-
-function chooseEnding(ending) {
-  state.ending = ending; saveState(); showEndingResult(ending);
-}
-
-function showEndingResult(ending) {
-  const modal = document.querySelector("#ending");
-  modal.classList.remove("hidden");
-  const card = modal.querySelector(".ending-card");
-  const results = {
-    expose: ["ENDING 01 // SIGNAL BROADCAST", "你公开了事故档案。ORION 的调查被重新启动，但林澈的位置也更容易被追踪。真相获得了代价。"],
-    protect: ["ENDING 02 // GHOST PROTOCOL", "你销毁了位置线索，只保留加密证据。林澈成功消失，而真相暂时留在你手中。"],
-  };
-  card.innerHTML = `<div class="eyebrow">CASE 017 CLOSED</div><h2>${results[ending][0]}</h2><p class="ending-result">${results[ending][1]}</p><button class="primary-button" onclick="localStorage.removeItem('${SAVE_KEY}');location.reload()">重新调查案件</button>`;
-}
-
-function toast(title, message) {
-  const item = document.createElement("div"); item.className = "toast";
-  item.innerHTML = `<b>${title}</b><p>${message}</p>`;
-  document.querySelector("#toast-layer").appendChild(item);
-  setTimeout(() => item.remove(), 4200);
+function toast(t, m) {
+  const e = document.createElement("div");
+  e.className = "toast";
+  e.innerHTML = `<b>${t}</b><p>${m}</p>`;
+  document.querySelector("#toast-layer").appendChild(e);
+  setTimeout(() => e.remove(), 3500);
 }

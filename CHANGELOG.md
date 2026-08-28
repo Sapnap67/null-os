@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 - 2026-08-28
+
+- Expanded NULL.OS from one story into a three-case mystery anthology.
+- Added Case 042 with a frequency puzzle and Case 108 with a sequence puzzle.
+- Added case selection, separate saves, distinct themes, commands, passwords and endings.
+
 ## 0.1.0 - 2026-08-28
 
 - Added the first complete playable Case 017 story.

@@ -1,85 +1,150 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050812">
-  <title>NULL.OS // CASE 017</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23050812'/%3E%3Cpath d='M14 44V20l18 24V20M40 44l10-24' fill='none' stroke='%2342f5e9' stroke-width='6'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div id="boot" class="boot-screen" aria-label="系统启动画面">
-    <div class="boot-mark">N//</div>
-    <div class="boot-title">NULL.OS</div>
-    <div id="boot-log" class="boot-log"></div>
-    <div class="boot-track"><span id="boot-progress"></span></div>
-  </div>
-
-  <main id="desktop" class="desktop hidden" aria-label="NULL.OS 桌面">
-    <div class="noise"></div>
-    <header class="topbar">
-      <button id="system-button" class="system-button" type="button">N//</button>
-      <span class="system-name">NULL.OS <b>RECOVERY MODE</b></span>
-      <div class="case-status"><span class="status-dot"></span> CASE 017</div>
-      <time id="clock">00:00:00</time>
-    </header>
-
-    <section class="objective-panel" aria-live="polite">
-      <div class="eyebrow">ACTIVE DIRECTIVE</div>
-      <h1 id="objective-title">调查这台电脑的主人去了哪里</h1>
-      <div class="progress-row"><span id="clue-count">0 / 5 CLUES</span><span id="save-state">AUTO-SAVED</span></div>
-      <div class="progress-track"><span id="clue-progress"></span></div>
-    </section>
-
-    <section class="desktop-icons" aria-label="应用">
-      <button class="desktop-icon" data-app="files"><span>▱</span><b>FILES</b><small>9 ITEMS</small></button>
-      <button class="desktop-icon" data-app="mail"><span>✉</span><b>MAIL</b><small>3 UNREAD</small></button>
-      <button class="desktop-icon" data-app="terminal"><span>_</span><b>TERMINAL</b><small>ADMIN</small></button>
-      <button class="desktop-icon locked-icon" data-app="vault"><span>◇</span><b>VAULT</b><small>ENCRYPTED</small></button>
-      <button class="desktop-icon" data-app="archive"><span>⌁</span><b>ARCHIVE</b><small>RECOVERED</small></button>
-    </section>
-
-    <aside id="evidence-board" class="evidence-board">
-      <div class="eyebrow">EVIDENCE BUFFER</div>
-      <div id="evidence-list" class="evidence-list"><p>No verified evidence.</p></div>
-    </aside>
-
-    <div id="window-layer" class="window-layer"></div>
-    <div id="toast-layer" class="toast-layer" aria-live="polite"></div>
-
-    <footer class="taskbar">
-      <button data-app="files" title="文件">▱</button>
-      <button data-app="mail" title="邮件">✉</button>
-      <button data-app="terminal" title="终端">_</button>
-      <button data-app="vault" title="保险库">◇</button>
-      <span class="task-divider"></span>
-      <button id="reset-case" class="reset-button" title="重置案件">RESET CASE</button>
-    </footer>
-  </main>
-
-  <section id="ending" class="ending hidden" aria-live="assertive">
-    <div class="ending-card">
-      <div class="eyebrow">FINAL DECISION</div>
-      <h2>你找到了真相。</h2>
-      <p>NULL.OS 不是入侵者，而是林澈为阻止 ORION 删除证据而留下的备份人格。最后一份证据只能发送一次。</p>
-      <div class="ending-actions">
-        <button data-ending="expose">公开 ORION 档案<small>让所有人知道真相</small></button>
-        <button data-ending="protect">隐藏林澈的位置<small>保护她并销毁追踪线索</small></button>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050812" />
+    <title>NULL.OS // CASE 017</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23050812'/%3E%3Cpath d='M14 44V20l18 24V20M40 44l10-24' fill='none' stroke='%2342f5e9' stroke-width='6'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="boot" class="boot-screen" aria-label="系统启动画面">
+      <div class="boot-mark">N//</div>
+      <div class="boot-title">NULL.OS</div>
+      <div id="boot-log" class="boot-log"></div>
+      <div class="boot-track"><span id="boot-progress"></span></div>
     </div>
-  </section>
 
-  <template id="window-template">
-    <article class="app-window">
-      <header class="window-header">
-        <div><span class="window-sigil">N//</span><b class="window-title"></b></div>
-        <button class="window-close" type="button" aria-label="关闭">×</button>
+    <section id="case-select" class="case-select hidden" aria-label="案件选择">
+      <div class="case-select-header">
+        <div class="boot-mark small-mark">N//</div>
+        <div>
+          <div class="eyebrow">NULL.OS RECOVERY NETWORK</div>
+          <h1>SELECT A CASE</h1>
+          <p>
+            选择一份损坏的设备镜像。每个案件拥有独立故事、谜题、结局和存档。
+          </p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <button class="case-card" data-case="017">
+          <span class="case-number">CASE 017</span><b>失踪的研究员</b>
+          <p>
+            一台断网电脑、一份被删除的事故记录，以及一个声称自己不是入侵者的AI。
+          </p>
+          <small>难度：NORMAL // 科研悬疑</small
+          ><i data-case-progress="017">NEW CASE</i>
+        </button>
+        <button class="case-card" data-case="042">
+          <span class="case-number">CASE 042</span><b>零号站末班车</b>
+          <p>
+            地铁系统记录了一座不存在的车站。凌晨列车偏离路线后，三名维修员失踪。
+          </p>
+          <small>难度：HARD // 都市怪谈</small
+          ><i data-case-progress="042">NEW CASE</i>
+        </button>
+        <button class="case-card" data-case="108">
+          <span class="case-number">CASE 108</span><b>记忆档案馆</b>
+          <p>一名学生要求删除自己的记忆副本，但档案中的“她”拒绝被关机。</p>
+          <small>难度：EXPERT // 心理科幻</small
+          ><i data-case-progress="108">NEW CASE</i>
+        </button>
+      </div>
+    </section>
+
+    <main id="desktop" class="desktop hidden" aria-label="NULL.OS 桌面">
+      <div class="noise"></div>
+      <header class="topbar">
+        <button id="system-button" class="system-button" type="button">
+          N//
+        </button>
+        <span class="system-name">NULL.OS <b>RECOVERY MODE</b></span>
+        <div class="case-status">
+          <span class="status-dot"></span> <span id="case-label">CASE 017</span>
+        </div>
+        <time id="clock">00:00:00</time>
       </header>
-      <div class="window-body"></div>
-    </article>
-  </template>
 
-  <script src="app.js"></script>
-</body>
+      <section class="objective-panel" aria-live="polite">
+        <div class="eyebrow">ACTIVE DIRECTIVE</div>
+        <h1 id="objective-title"></h1>
+        <div class="progress-row">
+          <span id="clue-count">0 / 5 CLUES</span
+          ><span id="save-state">AUTO-SAVED</span>
+        </div>
+        <div class="progress-track"><span id="clue-progress"></span></div>
+      </section>
+
+      <section class="desktop-icons" aria-label="应用">
+        <button class="desktop-icon" data-app="files">
+          <span>▱</span><b>FILES</b><small>RECOVERED</small>
+        </button>
+        <button class="desktop-icon" data-app="mail">
+          <span>✉</span><b>MAIL</b><small>OFFLINE</small>
+        </button>
+        <button class="desktop-icon" data-app="terminal">
+          <span>_</span><b>TERMINAL</b><small>ADMIN</small>
+        </button>
+        <button class="desktop-icon locked-icon" data-app="vault">
+          <span>◇</span><b>VAULT</b><small>ENCRYPTED</small>
+        </button>
+        <button class="desktop-icon" data-app="archive">
+          <span>⌁</span><b>ARCHIVE</b><small>RECOVERED</small>
+        </button>
+      </section>
+
+      <aside id="evidence-board" class="evidence-board">
+        <div class="eyebrow">EVIDENCE BUFFER</div>
+        <div id="evidence-list" class="evidence-list">
+          <p>No verified evidence.</p>
+        </div>
+      </aside>
+
+      <div id="window-layer" class="window-layer"></div>
+      <div id="toast-layer" class="toast-layer" aria-live="polite"></div>
+
+      <footer class="taskbar">
+        <button data-app="files" title="文件">▱</button>
+        <button data-app="mail" title="邮件">✉</button>
+        <button data-app="terminal" title="终端">_</button>
+        <button data-app="vault" title="保险库">◇</button>
+        <span class="task-divider"></span>
+        <button id="reset-case" class="reset-button" title="重置案件">
+          RESET CASE
+        </button>
+      </footer>
+    </main>
+
+    <section id="ending" class="ending hidden" aria-live="assertive">
+      <div class="ending-card">
+        <div class="eyebrow">FINAL DECISION</div>
+        <h2>你找到了真相。</h2>
+        <p id="ending-intro"></p>
+        <div class="ending-actions">
+          <button data-ending="first"></button>
+          <button data-ending="second"></button>
+        </div>
+      </div>
+    </section>
+
+    <template id="window-template">
+      <article class="app-window">
+        <header class="window-header">
+          <div>
+            <span class="window-sigil">N//</span><b class="window-title"></b>
+          </div>
+          <button class="window-close" type="button" aria-label="关闭">
+            ×
+          </button>
+        </header>
+        <div class="window-body"></div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
 </html>
