@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - 2026-08-28
+
+- Rebuilt the landing page as a full computer-style desktop.
+- Added a CASE HUB desktop app for accepting, resuming and reopening cases.
+- Added desktop shortcuts, taskbar, system tray, clock and lightweight system notifications.
+- Preserved separate saves and the persistent global light/dark theme.
+
 ## 0.2.1 - 2026-08-28
 
 - Unified all cases under a black-and-blue visual identity.

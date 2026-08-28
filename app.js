@@ -227,12 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(localStorage.getItem("null-os-theme") || "dark");
   bind();
   boot();
-  setInterval(
-    () =>
-      (document.querySelector("#clock").textContent =
-        new Date().toLocaleTimeString("zh-CN", { hour12: false })),
-    1000,
-  );
+  const updateClocks = () => {
+    const time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+    document.querySelector("#clock").textContent = time;
+    document.querySelector("#home-clock").textContent = time;
+  };
+  updateClocks();
+  setInterval(updateClocks, 1000);
 });
 function boot() {
   const p = document.querySelector("#boot-progress"),
@@ -250,7 +251,9 @@ function boot() {
   );
   setTimeout(() => {
     document.querySelector("#boot").classList.add("hidden");
-    cases();
+    const requestedCase = new URLSearchParams(location.search).get("case");
+    if (requestedCase && CASES[requestedCase]) start(requestedCase);
+    else cases();
   }, 1300);
 }
 function bind() {
@@ -262,8 +265,22 @@ function bind() {
     };
   });
   document
-    .querySelectorAll("[data-case]")
-    .forEach((b) => (b.onclick = () => start(b.dataset.case)));
+    .querySelectorAll("[data-home-app='cases']")
+    .forEach((b) => (b.onclick = openCaseHub));
+  document.querySelectorAll(".case-launch").forEach((button) => {
+    button.onclick = () => start(button.dataset.caseId);
+  });
+  document.querySelector("#close-case-hub").onclick = closeCaseHub;
+  document.querySelectorAll("[data-home-info]").forEach((button) => {
+    button.onclick = () => {
+      const messages = {
+        notes: "便笺为空。新的调查记录会保存在案件中心。",
+        system: "NULL.OS 2.1 // 本地模式 // 网络隔离正常",
+        trash: "回收站为空。没有可恢复的项目。",
+      };
+      homeToast(messages[button.dataset.homeInfo]);
+    };
+  });
   document
     .querySelectorAll("[data-app]")
     .forEach((b) => (b.onclick = () => openApp(b.dataset.app)));
@@ -289,25 +306,52 @@ function applyTheme(theme) {
   });
 }
 function cases() {
+  history.replaceState({}, "", location.pathname);
   document.querySelector("#desktop").classList.add("hidden");
   document.querySelector("#ending").classList.add("hidden");
   document.querySelector("#case-select").classList.remove("hidden");
+  closeCaseHub();
   document.querySelector("#window-layer").innerHTML = "";
   document.body.removeAttribute("data-case");
   progress();
 }
+function openCaseHub() {
+  progress();
+  document.querySelector("#case-hub").classList.remove("hidden");
+}
+function closeCaseHub() {
+  document.querySelector("#case-hub").classList.add("hidden");
+}
+function homeToast(message) {
+  const toast = document.querySelector("#home-toast");
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  clearTimeout(homeToast.timer);
+  homeToast.timer = setTimeout(() => toast.classList.add("hidden"), 2600);
+}
 function progress() {
+  let available = 0;
   Object.keys(CASES).forEach((id) => {
     const s = load(id),
       e = document.querySelector(`[data-case-progress='${id}']`);
-    if (e)
-      e.textContent =
+    const button = document.querySelector(`[data-case-id='${id}']`);
+    if (s.ending === null) available++;
+    if (e) {
+      e.textContent = s.ending !== null
+        ? "CASE CLOSED"
+        : s.clues.length
+          ? `${s.clues.length}/5 EVIDENCE`
+          : "NEW CASE";
+    }
+    if (button)
+      button.textContent =
         s.ending !== null
-          ? "CASE CLOSED // REPLAY"
+          ? "重新进入"
           : s.clues.length
-            ? `${s.clues.length}/5 EVIDENCE // RESUME`
-            : "NEW CASE";
+            ? "继续调查"
+            : "接受任务";
   });
+  document.querySelector("#case-alert").textContent = available;
 }
 function start(id) {
   cid = id;

@@ -87,36 +87,218 @@ body[data-theme="light"] {
   transition: width 0.35s;
 }
 
-.case-select {
+.home-desktop {
   position: fixed;
   inset: 0;
   z-index: 900;
-  padding: clamp(35px, 7vh, 80px) clamp(30px, 7vw, 110px);
-  overflow: auto;
-  background:
-    radial-gradient(circle at 50% 20%, #102436, transparent 42%), #03060c;
+  min-width: 920px;
+  min-height: 620px;
+  overflow: hidden;
+  background: #02050a;
 }
-.case-select-header {
+.home-wallpaper {
+  position: absolute;
+  inset: 0 0 50px;
+  overflow: hidden;
+  background:
+    linear-gradient(120deg, transparent 0 64%, rgba(49, 156, 255, 0.06) 64% 65%, transparent 65%),
+    radial-gradient(circle at 72% 42%, rgba(20, 104, 185, 0.28), transparent 25%),
+    radial-gradient(circle at 68% 48%, #07192b, transparent 44%),
+    linear-gradient(135deg, #02050a, #06111d 65%, #02050a);
+}
+.wallpaper-orb {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  width: min(42vw, 590px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(49, 156, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 0 55px rgba(49, 156, 255, 0.025),
+    0 0 0 120px rgba(49, 156, 255, 0.018),
+    inset 0 0 120px rgba(49, 156, 255, 0.06);
+}
+.wallpaper-orb::before,
+.wallpaper-orb::after {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  border: 1px solid rgba(49, 156, 255, 0.16);
+  border-radius: 50%;
+}
+.wallpaper-orb::after {
+  inset: 32%;
+  background: rgba(49, 156, 255, 0.035);
+}
+.wallpaper-brand {
+  position: absolute;
+  right: 6vw;
+  bottom: 8vh;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  color: rgba(105, 185, 255, 0.35);
+  letter-spacing: 9px;
+}
+.wallpaper-brand b { font-size: 38px; letter-spacing: -5px; }
+.wallpaper-brand span { font-size: 13px; }
+.home-icons {
+  position: absolute;
+  top: 28px;
+  left: 24px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, 104px);
+  gap: 8px 12px;
+}
+.home-icon {
+  position: relative;
+  width: 104px;
+  height: 96px;
+  padding: 8px 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #dcecf2;
+  cursor: pointer;
+  text-align: center;
+}
+.home-icon:hover,
+.home-icon:focus {
+  outline: none;
+  border-color: rgba(49, 156, 255, 0.42);
+  background: rgba(49, 156, 255, 0.12);
+}
+.home-app-symbol {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 5px;
+  place-items: center;
+  border: 1px solid rgba(105, 185, 255, 0.38);
+  border-radius: 12px;
+  background: linear-gradient(145deg, #0d4779, #082540);
+  color: #8dccff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  font-size: 23px;
+}
+.case-hub-symbol { background: linear-gradient(145deg, #248cdf, #0b3c67); color: white; }
+.home-icon b,
+.home-icon small { display: block; text-shadow: 0 1px 4px #000; }
+.home-icon b { font-size: 11px; font-weight: 500; }
+.home-icon small { margin-top: 2px; color: #7ca5c4; font-size: 8px; }
+.home-icon i {
+  position: absolute;
+  top: 3px;
+  right: 19px;
+  min-width: 18px;
+  height: 18px;
+  padding: 2px 5px;
+  border-radius: 10px;
+  background: #258fe6;
+  color: white;
+  font-size: 9px;
+  font-style: normal;
+}
+.home-taskbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  height: 50px;
   display: flex;
   align-items: center;
-  gap: 32px;
-  max-width: 1100px;
-  margin: 0 auto 50px;
+  gap: 7px;
+  padding: 0 12px;
+  border-top: 1px solid rgba(49, 156, 255, 0.22);
+  background: rgba(3, 9, 16, 0.94);
+  backdrop-filter: blur(18px);
 }
-.small-mark {
-  font-size: 56px;
-  letter-spacing: -8px;
+.home-start,
+.home-pinned {
+  height: 38px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #b9d5e8;
+  cursor: pointer;
 }
-.case-select h1 {
-  margin: 6px 0;
-  font-size: clamp(32px, 5vw, 58px);
-  letter-spacing: 7px;
+.home-start { width: 48px; color: var(--cyan); font-weight: 900; font-size: 16px; }
+.home-pinned { padding: 0 14px; font-size: 10px; letter-spacing: 1px; }
+.home-pinned span { margin-right: 8px; color: var(--cyan); }
+.home-start:hover,
+.home-pinned:hover { border-color: var(--line); background: rgba(49, 156, 255, 0.1); }
+.home-task-spacer { flex: 1; }
+.home-tray { display: flex; align-items: center; gap: 12px; color: #7190a6; font-size: 11px; }
+.home-tray time { width: 70px; color: #c3d6e3; text-align: right; }
+.case-hub-window {
+  position: absolute;
+  top: 7vh;
+  left: 50%;
+  z-index: 15;
+  width: min(1180px, 88vw);
+  height: min(720px, 82vh);
+  overflow: hidden;
+  border: 1px solid rgba(49, 156, 255, 0.5);
+  border-radius: 8px;
+  background: rgba(4, 10, 18, 0.98);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.75);
+  transform: translateX(-50%);
+  animation: hub-open 0.22s ease-out;
 }
-.case-select-header p {
-  max-width: 720px;
+.case-hub-titlebar {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  border-bottom: 1px solid var(--line);
+  background: #081522;
+}
+.case-hub-titlebar div { display: flex; align-items: center; gap: 10px; }
+.case-hub-titlebar span { color: var(--cyan); }
+.case-hub-titlebar b { font-size: 11px; letter-spacing: 2px; }
+.case-hub-titlebar small { color: var(--muted); font-size: 9px; }
+.case-hub-titlebar button {
+  width: 48px;
+  align-self: stretch;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
   color: var(--muted);
-  line-height: 1.7;
+  cursor: pointer;
+  font-size: 22px;
 }
+.case-hub-titlebar button:hover { background: var(--danger); color: white; }
+.case-hub-layout { display: grid; grid-template-columns: 190px 1fr; height: calc(100% - 46px); }
+.case-hub-sidebar {
+  position: relative;
+  padding: 28px 18px;
+  border-right: 1px solid var(--line);
+  background: #050e18;
+}
+.hub-logo { color: var(--cyan); font-size: 34px; font-weight: 900; letter-spacing: -5px; }
+.case-hub-sidebar > p { color: #7895aa; font-size: 9px; line-height: 1.7; letter-spacing: 3px; }
+.case-hub-sidebar nav { margin: 38px -18px 0; }
+.case-hub-sidebar nav button {
+  width: 100%;
+  padding: 13px 20px;
+  border: 0;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: left;
+}
+.case-hub-sidebar nav button.active { border-left-color: var(--cyan); background: rgba(49, 156, 255, 0.1); color: var(--cyan); }
+.case-hub-sidebar > small { position: absolute; bottom: 20px; color: #456278; font-size: 8px; }
+.case-hub-content { padding: 34px; overflow: auto; }
+.case-hub-heading { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.case-hub-heading h1 { margin: 8px 0; font-size: 28px; }
+.case-hub-heading p { margin: 0; color: var(--muted); font-size: 11px; }
+.agent-chip { padding: 8px 10px; border: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+.agent-chip span { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: #54d58b; box-shadow: 0 0 8px #54d58b; }
 .theme-toggle {
   padding: 8px 12px;
   border: 1px solid var(--line);
@@ -134,14 +316,12 @@ body[data-theme="light"] {
 .case-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
-  gap: 22px;
-  max-width: 1200px;
-  margin: auto;
+  gap: 16px;
 }
 .case-card {
   position: relative;
-  min-height: 310px;
-  padding: 28px;
+  min-height: 300px;
+  padding: 24px;
   overflow: hidden;
   border: 1px solid #1b3648;
   background: linear-gradient(
@@ -150,7 +330,6 @@ body[data-theme="light"] {
     rgba(4, 10, 19, 0.96)
   );
   color: var(--text);
-  cursor: pointer;
   text-align: left;
   transition: 0.2s;
 }
@@ -163,12 +342,11 @@ body[data-theme="light"] {
   height: 170px;
   border: 1px solid rgba(66, 245, 233, 0.15);
   border-radius: 50%;
+  pointer-events: none;
 }
-.case-card:hover,
-.case-card:focus {
-  outline: 0;
+.case-card:hover {
   border-color: var(--cyan);
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
 }
 .case-number {
@@ -191,13 +369,45 @@ body[data-theme="light"] {
   color: var(--pink);
 }
 .case-card i {
-  position: absolute;
-  left: 28px;
-  bottom: 25px;
   color: #6e8794;
   font-size: 10px;
   font-style: normal;
   letter-spacing: 1px;
+}
+.case-card-footer {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  left: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.case-card-footer button {
+  padding: 9px 12px;
+  border: 1px solid var(--cyan);
+  background: rgba(49, 156, 255, 0.1);
+  color: var(--cyan);
+  cursor: pointer;
+  font-size: 10px;
+}
+.case-card-footer button:hover { background: var(--cyan); color: #02050a; }
+.home-toast {
+  position: absolute;
+  right: 24px;
+  bottom: 68px;
+  z-index: 30;
+  width: 330px;
+  padding: 15px 18px;
+  border: 1px solid var(--line);
+  background: #081522;
+  color: #b8d1e2;
+  box-shadow: 0 16px 45px #000;
+  font-size: 11px;
+  animation: toast-in 0.2s ease-out;
+}
+@keyframes hub-open {
+  from { opacity: 0; transform: translate(-50%, 18px) scale(0.98); }
 }
 
 .desktop {
@@ -701,13 +911,40 @@ body[data-theme="light"] {
   }
 }
 body[data-theme="light"] .boot-screen,
-body[data-theme="light"] .case-select,
 body[data-theme="light"] .desktop {
   background-color: var(--bg);
   background-image:
     linear-gradient(rgba(8, 110, 189, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(8, 110, 189, 0.05) 1px, transparent 1px);
 }
+body[data-theme="light"] .home-desktop {
+  background: #dcebf6;
+}
+body[data-theme="light"] .home-wallpaper {
+  background:
+    linear-gradient(120deg, transparent 0 64%, rgba(8, 110, 189, 0.08) 64% 65%, transparent 65%),
+    radial-gradient(circle at 72% 42%, rgba(46, 143, 214, 0.27), transparent 25%),
+    radial-gradient(circle at 68% 48%, #c4e0f3, transparent 44%),
+    linear-gradient(135deg, #eef6fb, #dbeaf5 65%, #cfe3f1);
+}
+body[data-theme="light"] .home-icon { color: #153047; }
+body[data-theme="light"] .home-icon b,
+body[data-theme="light"] .home-icon small { text-shadow: 0 1px 4px white; }
+body[data-theme="light"] .home-icon small { color: #51738a; }
+body[data-theme="light"] .home-taskbar,
+body[data-theme="light"] .case-hub-window,
+body[data-theme="light"] .case-hub-titlebar,
+body[data-theme="light"] .case-hub-sidebar,
+body[data-theme="light"] .home-toast {
+  background: rgba(246, 251, 255, 0.97);
+  color: var(--text);
+  box-shadow: 0 18px 55px rgba(28, 70, 105, 0.2);
+}
+body[data-theme="light"] .home-start,
+body[data-theme="light"] .home-pinned,
+body[data-theme="light"] .home-tray,
+body[data-theme="light"] .home-tray time { color: #24465d; }
+body[data-theme="light"] .wallpaper-brand { color: rgba(8, 110, 189, 0.35); }
 body[data-theme="light"] .case-card,
 body[data-theme="light"] .topbar,
 body[data-theme="light"] .objective-panel,
