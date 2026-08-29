@@ -943,6 +943,91 @@ body {
   font-size: 14px;
   line-height: 1.8;
 }
+
+/* Readability pass: larger everyday text, while keeping the vault hint compact. */
+body {
+  font-size: 15px;
+}
+.boot-log,
+.home-toast,
+.case-hub-heading p,
+.content-pane,
+.ending-card p,
+.ending-actions button {
+  font-size: 14px;
+}
+.home-icon b,
+.home-pinned,
+.case-hub-titlebar b,
+.case-hub-sidebar nav button,
+.case-card-footer button,
+.sidebar button,
+.desktop-icon b,
+.window-header b {
+  font-size: 13px;
+}
+.home-icon small,
+.case-hub-titlebar small,
+.case-hub-sidebar > p,
+.case-hub-sidebar > small,
+.agent-chip,
+.case-number,
+.case-card small,
+.case-card i,
+.progress-row,
+.desktop-icon small,
+.meta,
+.taskbar .reset-button {
+  font-size: 11px;
+}
+.home-tray,
+.system-name,
+.case-status,
+#clock,
+.evidence-list,
+.archive-library article p,
+.archive-library article small {
+  font-size: 12px;
+}
+.case-card p {
+  font-size: 14px;
+}
+.eyebrow,
+.archive-library article div span,
+.archive-library article strong,
+.evidence-list b,
+.toast b {
+  font-size: 11px;
+}
+.terminal {
+  font-size: 14px;
+}
+.vault-format {
+  width: 310px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+}
+.vault-format b,
+.vault-format small,
+.vault-label {
+  font-size: 10px;
+}
+.vault-format code {
+  margin: 5px 0;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+}
+.vault input {
+  width: 250px;
+  padding: 10px;
+  font-size: 14px;
+}
+.vault-error {
+  max-width: 390px;
+  margin: 0 auto;
+  font-size: 12px;
+  line-height: 1.45;
+}
 @keyframes toast-in {
   from {
     transform: translateX(30px);

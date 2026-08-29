@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2 - 2026-08-29
+
+- Increased interface, case, window and status text sizes for readability.
+- Reduced the vault format panel and input footprint while keeping its instructions clear.
+
 ## 0.3.1 - 2026-08-29
 
 - Removed light mode and kept the unified black-and-blue dark interface.
