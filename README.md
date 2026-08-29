@@ -14,7 +14,9 @@ Open `index.html`, launch CASE HUB from the home desktop, and accept one of thre
 - Five-piece evidence board and two endings
 - Automatic local progress saving
 - Three stories with separate progress, puzzles and endings
-- Persistent black-and-blue dark theme and blue-accented light theme
+- Unified black-and-blue dark interface
+- Functional CASE HUB views for all, completed and archived investigations
+- Guided vault-code format with forgiving input normalization
 - Responsive cyberpunk interface with boot animation and notifications
 
 See `用户手册.md` for the Chinese guide and `CHANGELOG.md` for updates.

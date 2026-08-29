@@ -26,17 +26,6 @@ body {
   background: var(--bg);
   color: var(--text);
 }
-body[data-theme="light"] {
-  color-scheme: light;
-  --bg: #edf4fa;
-  --panel: rgba(255, 255, 255, 0.96);
-  --panel-2: #e0edf7;
-  --text: #102537;
-  --muted: #567184;
-  --line: rgba(13, 101, 176, 0.25);
-  --cyan: #086ebd;
-  --pink: #238bd6;
-}
 .hidden {
   display: none !important;
 }
@@ -299,24 +288,56 @@ body[data-theme="light"] {
 .case-hub-heading p { margin: 0; color: var(--muted); font-size: 11px; }
 .agent-chip { padding: 8px 10px; border: 1px solid var(--line); color: var(--muted); font-size: 9px; }
 .agent-chip span { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: #54d58b; box-shadow: 0 0 8px #54d58b; }
-.theme-toggle {
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  background: rgba(49, 156, 255, 0.08);
-  color: var(--cyan);
-  font-size: 9px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.theme-toggle:hover {
-  background: var(--cyan);
-  color: var(--bg);
-}
 .case-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
   gap: 16px;
+}
+.hub-empty {
+  display: grid;
+  min-height: 260px;
+  place-content: center;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+.hub-empty b {
+  color: var(--cyan);
+  letter-spacing: 2px;
+}
+.archive-library {
+  display: grid;
+  gap: 12px;
+}
+.archive-library article {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: rgba(49, 156, 255, 0.045);
+}
+.archive-library article div span,
+.archive-library article div b {
+  display: block;
+}
+.archive-library article div span {
+  margin-bottom: 5px;
+  color: var(--cyan);
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.archive-library article strong {
+  color: var(--pink);
+  font-size: 10px;
+}
+.archive-library article p,
+.archive-library article small {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
 }
 .case-card {
   position: relative;
@@ -737,9 +758,50 @@ body[data-theme="light"] {
   color: var(--pink);
   font-size: 64px;
 }
+.vault-hint {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+.vault-format {
+  width: 360px;
+  max-width: 100%;
+  margin: 0 auto 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: rgba(49, 156, 255, 0.06);
+  text-align: left;
+}
+.vault-format b,
+.vault-format code,
+.vault-format small {
+  display: block;
+}
+.vault-format b {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.vault-format code {
+  margin: 7px 0;
+  color: var(--cyan);
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+.vault-format small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.vault-label {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 2px;
+}
 .vault input {
+  display: block;
   width: 270px;
-  margin: 20px auto 10px;
+  margin: 8px auto 10px;
   padding: 12px;
   border: 1px solid var(--line);
   outline: 0;
@@ -909,63 +971,4 @@ body[data-theme="light"] {
   .case-card p {
     min-height: 55px;
   }
-}
-body[data-theme="light"] .boot-screen,
-body[data-theme="light"] .desktop {
-  background-color: var(--bg);
-  background-image:
-    linear-gradient(rgba(8, 110, 189, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(8, 110, 189, 0.05) 1px, transparent 1px);
-}
-body[data-theme="light"] .home-desktop {
-  background: #dcebf6;
-}
-body[data-theme="light"] .home-wallpaper {
-  background:
-    linear-gradient(120deg, transparent 0 64%, rgba(8, 110, 189, 0.08) 64% 65%, transparent 65%),
-    radial-gradient(circle at 72% 42%, rgba(46, 143, 214, 0.27), transparent 25%),
-    radial-gradient(circle at 68% 48%, #c4e0f3, transparent 44%),
-    linear-gradient(135deg, #eef6fb, #dbeaf5 65%, #cfe3f1);
-}
-body[data-theme="light"] .home-icon { color: #153047; }
-body[data-theme="light"] .home-icon b,
-body[data-theme="light"] .home-icon small { text-shadow: 0 1px 4px white; }
-body[data-theme="light"] .home-icon small { color: #51738a; }
-body[data-theme="light"] .home-taskbar,
-body[data-theme="light"] .case-hub-window,
-body[data-theme="light"] .case-hub-titlebar,
-body[data-theme="light"] .case-hub-sidebar,
-body[data-theme="light"] .home-toast {
-  background: rgba(246, 251, 255, 0.97);
-  color: var(--text);
-  box-shadow: 0 18px 55px rgba(28, 70, 105, 0.2);
-}
-body[data-theme="light"] .home-start,
-body[data-theme="light"] .home-pinned,
-body[data-theme="light"] .home-tray,
-body[data-theme="light"] .home-tray time { color: #24465d; }
-body[data-theme="light"] .wallpaper-brand { color: rgba(8, 110, 189, 0.35); }
-body[data-theme="light"] .case-card,
-body[data-theme="light"] .topbar,
-body[data-theme="light"] .objective-panel,
-body[data-theme="light"] .evidence-board,
-body[data-theme="light"] .taskbar,
-body[data-theme="light"] .app-window,
-body[data-theme="light"] .window-header,
-body[data-theme="light"] .sidebar,
-body[data-theme="light"] .terminal,
-body[data-theme="light"] .vault input,
-body[data-theme="light"] .toast,
-body[data-theme="light"] .ending-card {
-  background: var(--panel);
-  color: var(--text);
-  box-shadow: 0 16px 45px rgba(28, 70, 105, 0.18);
-}
-body[data-theme="light"] .ending {
-  background: rgba(225, 237, 247, 0.94);
-}
-body[data-theme="light"] .frequency-grid button,
-body[data-theme="light"] .ending-actions button {
-  background: var(--panel-2);
-  color: var(--text);
 }

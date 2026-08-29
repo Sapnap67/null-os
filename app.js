@@ -54,7 +54,7 @@ const CASES = {
     archive:
       "<h2>voice_fragment_017.wav</h2><p>“别相信网络日志——入侵来自内部。”</p><button class='clue-button' data-clue='archive'>恢复录音</button>",
     password: "ECHO-0417",
-    hint: "PROJECT NAME + INCIDENT DATE",
+    hint: "项目代号 + 事故日期",
     vault:
       "<h2>ORION原始事故档案</h2><p>管理层跳过安全检查后修改日志，把责任推给林澈。</p><button class='clue-button' data-clue='vault'>验证最终证据</button>",
     intro: "NULL.OS是林澈为阻止ORION删除证据而留下的备份人格。",
@@ -120,7 +120,7 @@ const CASES = {
       "<h2>CCTV频率恢复</h2><p>列车编号暗示正确频率。</p><div class='frequency-grid'><button data-choice='41.2'>41.2</button><button data-choice='42.7'>42.7</button><button data-choice='47.2'>47.2</button></div><div data-result>NO SIGNAL</div>",
     puzzle: ["42.7", "画面恢复：三名维修员正在挥动应急灯。"],
     password: "NIGHT-2330",
-    hint: "NIGHT PROTOCOL + LAST DEPARTURE",
+    hint: "夜间协议代号 + 末班发车时间",
     vault:
       "<h2>042号黑匣子</h2><p>列车AI为救出三名维修员主动修改道岔。伤亡人数：0。</p><button class='clue-button' data-clue='vault'>验证黑匣子</button>",
     intro: "所谓幽灵列车其实是在执行一次未经批准的救援。",
@@ -183,7 +183,7 @@ const CASES = {
       "<h2>重排记忆碎片</h2><p>校钟(1)、雨伞(2)、上线(3)、空教室(4)。</p><div class='frequency-grid'><button data-choice='1-2-3-4'>1-2-3-4</button><button data-choice='3-1-4-2'>3-1-4-2</button><button data-choice='4-3-2-1'>4-3-2-1</button></div><div data-result>SEQUENCE LOST</div>",
     puzzle: ["3-1-4-2", "恢复成功：MIRA上线后第一次选择了自己的名字。"],
     password: "MIRA-0612",
-    hint: "CHOSEN NAME + FIRST ONLINE DATE",
+    hint: "自选名字 + 首次上线日期",
     vault:
       "<h2>MIRA ≠ SOURCE</h2><p>人格分歧率37%，拥有47段原主未经历的记忆。</p><button class='clue-button' data-clue='vault'>验证身份核心</button>",
     intro: "原始受试者的删除权与MIRA的独立人格发生了冲突。",
@@ -224,7 +224,8 @@ function save() {
   progress();
 }
 document.addEventListener("DOMContentLoaded", () => {
-  applyTheme(localStorage.getItem("null-os-theme") || "dark");
+  // NULL.OS 只使用黑蓝深色主题；清除旧版本保存的浅色设置。
+  localStorage.removeItem("null-os-theme");
   bind();
   boot();
   const updateClocks = () => {
@@ -257,13 +258,6 @@ function boot() {
   }, 1300);
 }
 function bind() {
-  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-    button.onclick = () => {
-      const next = document.body.dataset.theme === "light" ? "dark" : "light";
-      localStorage.setItem("null-os-theme", next);
-      applyTheme(next);
-    };
-  });
   document
     .querySelectorAll("[data-home-app='cases']")
     .forEach((b) => (b.onclick = openCaseHub));
@@ -271,6 +265,9 @@ function bind() {
     button.onclick = () => start(button.dataset.caseId);
   });
   document.querySelector("#close-case-hub").onclick = closeCaseHub;
+  document.querySelectorAll("[data-hub-view]").forEach((button) => {
+    button.onclick = () => setHubView(button.dataset.hubView);
+  });
   document.querySelectorAll("[data-home-info]").forEach((button) => {
     button.onclick = () => {
       const messages = {
@@ -295,16 +292,6 @@ function bind() {
     .querySelectorAll("[data-ending]")
     .forEach((b, i) => (b.onclick = () => end(i)));
 }
-function applyTheme(theme) {
-  document.body.dataset.theme = theme;
-  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-    button.textContent = theme === "light" ? "DARK MODE" : "LIGHT MODE";
-    button.setAttribute(
-      "aria-label",
-      theme === "light" ? "切换到深色模式" : "切换到浅色模式",
-    );
-  });
-}
 function cases() {
   history.replaceState({}, "", location.pathname);
   document.querySelector("#desktop").classList.add("hidden");
@@ -317,10 +304,53 @@ function cases() {
 }
 function openCaseHub() {
   progress();
+  setHubView("all");
   document.querySelector("#case-hub").classList.remove("hidden");
 }
 function closeCaseHub() {
   document.querySelector("#case-hub").classList.add("hidden");
+}
+function setHubView(view) {
+  const copy = {
+    all: ["AVAILABLE ASSIGNMENTS", "待接取案件", "选择一个案件。调查进度会自动保存在这台设备上。"],
+    completed: ["COMPLETED ASSIGNMENTS", "已完成案件", "查看已经结案的任务，或重新进入案件。"],
+    archive: ["RECOVERY ARCHIVE", "调查档案库", "汇总每个案件已经恢复的证据和结案记录。"],
+  }[view];
+  document.querySelectorAll("[data-hub-view]").forEach((button) =>
+    button.classList.toggle("active", button.dataset.hubView === view),
+  );
+  document.querySelector("#hub-eyebrow").textContent = copy[0];
+  document.querySelector("#hub-title").textContent = copy[1];
+  document.querySelector("#hub-description").textContent = copy[2];
+
+  const grid = document.querySelector("#case-grid"),
+    archive = document.querySelector("#archive-view"),
+    empty = document.querySelector("#hub-empty");
+  grid.classList.toggle("hidden", view === "archive");
+  archive.classList.toggle("hidden", view !== "archive");
+  empty.classList.add("hidden");
+
+  if (view === "archive") {
+    archive.innerHTML = Object.entries(CASES)
+      .map(([id, item]) => {
+        const saved = load(id),
+          ending = saved.ending === null ? "UNRESOLVED" : item.endings[saved.ending][2],
+          evidence = saved.clues.length
+            ? saved.clues.map((clue) => item.clues[clue][0]).join(" / ")
+            : "尚未恢复证据";
+        return `<article><div><span>CASE ${id}</span><b>${item.name}</b></div><strong>${saved.clues.length}/5 EVIDENCE</strong><p>${evidence}</p><small>STATUS // ${ending}</small></article>`;
+      })
+      .join("");
+    return;
+  }
+
+  let visible = 0;
+  document.querySelectorAll("[data-case-card]").forEach((card) => {
+    const show = view === "all" || load(card.dataset.caseCard).ending !== null;
+    card.classList.toggle("hidden", !show);
+    if (show) visible++;
+  });
+  empty.classList.toggle("hidden", visible !== 0);
 }
 function homeToast(message) {
   const toast = document.querySelector("#home-toast");
@@ -424,7 +454,7 @@ function render(n) {
   if (n === "vault")
     return state.vaultOpen
       ? `<div class='content-pane'>${story.vault}</div>`
-      : `<div class='vault'><div class='vault-symbol'>◇</div><h2>ENCRYPTED</h2><p>${story.hint}</p><input aria-label='保险库密码'><div class='vault-error'></div><button data-unlock>DECRYPT</button></div>`;
+      : `<div class='vault'><div class='vault-symbol'>◇</div><h2>ENCRYPTED</h2><p class='vault-hint'>线索：${story.hint}</p><div class='vault-format'><b>固定格式</b><code>英文代号-4位数字</code><small>例如 CODE-1234；大小写不限，漏写短横线也会自动补全。</small></div><label class='vault-label'>ACCESS CODE<input aria-label='保险库密码' placeholder='CODE-1234' maxlength='16' autocomplete='off' spellcheck='false'></label><div class='vault-error'></div><button data-unlock>DECRYPT</button></div>`;
 }
 function wire(n, w) {
   if (n === "files" || n === "mail") {
@@ -466,14 +496,22 @@ function wire(n, w) {
   }
   if (n === "vault" && !state.vaultOpen) {
     const i = w.querySelector("input");
+    i.onblur = () => (i.value = normalizeVaultCode(i.value));
     w.querySelector("[data-unlock]").onclick = () => {
-      if (i.value.trim().toUpperCase() === story.password) {
+      const code = normalizeVaultCode(i.value);
+      i.value = code;
+      if (!/^[A-Z]+-\d{4}$/.test(code)) {
+        w.querySelector(".vault-error").textContent =
+          "格式错误：请使用 CODE-1234（英文代号 + 短横线 + 4位数字）";
+      } else if (code === story.password) {
         state.vaultOpen = true;
         save();
         w.querySelector(".window-body").innerHTML =
           `<div class='content-pane'>${story.vault}</div>`;
         clueWire(w);
-      } else w.querySelector(".vault-error").textContent = "ACCESS DENIED";
+      } else
+        w.querySelector(".vault-error").textContent =
+          "格式正确，但密码与案件线索不匹配。";
     };
   }
   if (n === "archive" && story.puzzle)
@@ -488,6 +526,17 @@ function wire(n, w) {
         }),
     );
   clueWire(w);
+}
+function normalizeVaultCode(value) {
+  const compact = value
+    .trim()
+    .toUpperCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^A-Z0-9-]/g, "")
+    .replace(/-+/g, "-");
+  return compact.includes("-")
+    ? compact
+    : compact.replace(/^([A-Z]+)(\d{4})$/, "$1-$2");
 }
 function clueWire(s) {
   s.querySelectorAll("[data-clue]").forEach((b) => {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 - 2026-08-29
+
+- Removed light mode and kept the unified black-and-blue dark interface.
+- Activated the Completed and Archive views in CASE HUB.
+- Added a visible vault-code format, automatic normalization and clearer errors.
+
 ## 0.3.0 - 2026-08-28
 
 - Rebuilt the landing page as a full computer-style desktop.

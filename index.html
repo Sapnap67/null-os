@@ -9,7 +9,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23050812'/%3E%3Cpath d='M14 44V20l18 24V20M40 44l10-24' fill='none' stroke='%2342f5e9' stroke-width='6'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="styles.css?v=0.3.1" />
+    <link rel="stylesheet" href="styles.css?v=0.3.2" />
   </head>
   <body>
     <div id="boot" class="boot-screen" aria-label="系统启动画面">
@@ -55,41 +55,46 @@
             <div class="hub-logo">N//</div>
             <p>RECOVERY<br />NETWORK</p>
             <nav>
-              <button class="active" type="button">全部案件</button>
-              <button type="button" disabled>已完成</button>
-              <button type="button" disabled>档案库</button>
+              <button class="active" data-hub-view="all" type="button">全部案件</button>
+              <button data-hub-view="completed" type="button">已完成</button>
+              <button data-hub-view="archive" type="button">档案库</button>
             </nav>
             <small>LOCAL LINK // SECURE</small>
           </aside>
           <div class="case-hub-content">
             <div class="case-hub-heading">
               <div>
-                <div class="eyebrow">AVAILABLE ASSIGNMENTS</div>
-                <h1>待接取案件</h1>
-                <p>选择一个案件。调查进度会自动保存在这台设备上。</p>
+                <div id="hub-eyebrow" class="eyebrow">AVAILABLE ASSIGNMENTS</div>
+                <h1 id="hub-title">待接取案件</h1>
+                <p id="hub-description">选择一个案件。调查进度会自动保存在这台设备上。</p>
               </div>
               <div class="agent-chip"><span></span> AGENT ONLINE</div>
             </div>
-            <div class="case-grid">
-              <article class="case-card">
+            <div id="case-grid" class="case-grid">
+              <article class="case-card" data-case-card="017">
                 <span class="case-number">CASE 017</span><b>失踪的研究员</b>
                 <p>断网电脑、被删除的事故记录，以及一个声称自己不是入侵者的AI。</p>
                 <small>NORMAL // 科研悬疑</small>
                 <div class="case-card-footer"><i data-case-progress="017">NEW CASE</i><button class="case-launch" data-case-id="017" type="button">接受任务</button></div>
               </article>
-              <article class="case-card">
+              <article class="case-card" data-case-card="042">
                 <span class="case-number">CASE 042</span><b>零号站末班车</b>
                 <p>地铁系统记录了一座不存在的车站，三名维修员在凌晨失踪。</p>
                 <small>HARD // 都市怪谈</small>
                 <div class="case-card-footer"><i data-case-progress="042">NEW CASE</i><button class="case-launch" data-case-id="042" type="button">接受任务</button></div>
               </article>
-              <article class="case-card">
+              <article class="case-card" data-case-card="108">
                 <span class="case-number">CASE 108</span><b>记忆档案馆</b>
                 <p>一名学生要求删除记忆副本，但档案中的“她”拒绝被关机。</p>
                 <small>EXPERT // 心理科幻</small>
                 <div class="case-card-footer"><i data-case-progress="108">NEW CASE</i><button class="case-launch" data-case-id="108" type="button">接受任务</button></div>
               </article>
             </div>
+            <div id="hub-empty" class="hub-empty hidden">
+              <b>NO RECORDS FOUND</b>
+              <p>当前分类还没有案件记录。</p>
+            </div>
+            <div id="archive-view" class="archive-library hidden"></div>
           </div>
         </div>
       </article>
@@ -99,7 +104,6 @@
         <button class="home-start" data-home-app="cases" type="button" title="案件中心">N//</button>
         <button class="home-pinned" data-home-app="cases" type="button"><span>◆</span> CASE HUB</button>
         <span class="home-task-spacer"></span>
-        <button class="theme-toggle" data-theme-toggle type="button">LIGHT MODE</button>
         <div class="home-tray"><span>◒</span><span>⌁</span><time id="home-clock">00:00:00</time></div>
       </footer>
     </section>
@@ -114,9 +118,6 @@
         <div class="case-status">
           <span class="status-dot"></span> <span id="case-label">CASE 017</span>
         </div>
-        <button class="theme-toggle" data-theme-toggle type="button">
-          LIGHT MODE
-        </button>
         <time id="clock">00:00:00</time>
       </header>
 
@@ -196,6 +197,6 @@
       </article>
     </template>
 
-    <script src="app.js?v=0.3.4"></script>
+    <script src="app.js?v=0.3.5"></script>
   </body>
 </html>
